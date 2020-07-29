@@ -906,17 +906,12 @@ async function main() {
     await sleep(2000 + getRandom(0, 5) * 1000);
     let $ = cheerio.load(body);
 
-    let elements = []
-        .concat($("td.uContentListDesc p a").get())
-        .concat($("td.u6ListTD div.u6ListItem a").get())
-        .concat($("div.unityHtmlArticle p a").get());
-
     let pdfUrls: string[] = [];
-    for (let element of elements) {
+    for (let element of $("table.u6ListTable td a").get()) {
         let pdfUrl = new urlparser.URL(element.attribs.href, DevelopmentApplicationsUrl).href
         if (pdfUrl.toLowerCase().includes(".pdf"))
             if (!pdfUrls.some(url => url === pdfUrl))
-                pdfUrls.unshift(pdfUrl);
+                pdfUrls.push(pdfUrl);
     }
 
     // Always parse the most recent PDF file and randomly select one other PDF file to parse.
